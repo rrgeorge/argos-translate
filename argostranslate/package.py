@@ -9,6 +9,7 @@ import uuid
 import zipfile
 from pathlib import Path
 from threading import Lock
+from packaging import version
 
 import argostranslate.networking
 import argostranslate.settings
@@ -288,7 +289,7 @@ class Package(IPackage):
         """Update the package if a newer version is available."""
         for available_package in get_available_packages():
             if available_package.code == self.code:
-                if available_package.package_version > self.package_version:
+                if version.parse(available_package.package_version) > version.parse(self.package_version):
                     new_package_path = available_package.download()
                     uninstall(self)
                     install_from_path(new_package_path)
